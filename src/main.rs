@@ -27,13 +27,20 @@ async fn root() -> Html<String> {
     options.extension.superscript = true;
     options.extension.strikethrough = true;
     options.extension.footnotes = true;
+    // options.extension.front_matter_delimiter = Some("---".to_owned());
 
     options.render.unsafe_ = true;
 
     let file = fs::read_to_string("./markdown/test.markdown").unwrap();
-    let new: Vec<&str> = file.split("---").collect();
-    println!("{:#?}", new);
+    // let new: Vec<&str> = file.split("---").collect();
+    // println!("{:#?}", new);
 
-    let converted = markdown_to_html(new[2], &options);
-    Html(converted)
+    // let converted = markdown_to_html(new[2], &options);
+    // Html(converted);
+
+    let mark = markdown_to_html(&file, &options);
+
+    println!("{}", mark);
+
+    Html("Hi".to_string())
 }
