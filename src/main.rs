@@ -7,6 +7,48 @@ use comrak::{markdown_to_html, ComrakOptions};
 use std::fs;
 use std::net::SocketAddr;
 
+#[derive(Debug)]
+struct Meta {
+    file_name: String,
+    title: String,
+    date: String,
+    tags: Vec<String>,
+    series: String,
+}
+
+impl Meta {
+    fn new(file: &str) -> Self {
+        let mut meta = Self {
+            file_name: "".to_string(),
+            title: "".to_string(),
+            date: "".to_string(),
+            tags: vec![],
+            series: "".to_string(),
+        };
+        let raw_meta: Vec<&str> = file.split("---").collect();
+        let raw_meta: Vec<&str> = raw_meta[1].split("\n").collect();
+        let raw_meta: Vec<String> = raw_meta.iter().map(|&x| x.replace('\r', "")).collect();
+        println!("{:#?}", raw_meta);
+        for line in raw_meta {
+            println!("{}", line);
+            match line.split(":").collect::<Vec<&str>>()[0] {
+                "file_name" => meta.file_name = line,
+                "title" => {
+                    meta.title = line.split(":").collect::<Vec<&str>>()[1].trim().to_string()
+                }
+                "date" => meta.date = line.split(":").collect::<Vec<&str>>()[1].trim().to_string(),
+                "tags" => meta.tags = line.split(":").map(|s| s.to_owned()).collect(),
+                "series" => {
+                    meta.series = line.split(":").collect::<Vec<&str>>()[1].trim().to_string()
+                }
+                _ => (),
+            }
+        }
+        println!("{:#?}", meta);
+        return meta;
+    }
+}
+
 #[tokio::main]
 async fn main() {
     let app = Router::new().route("/", get(root));
