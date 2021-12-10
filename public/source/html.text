@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>How blog.wildwooddev works - WildwoodTech</title>
+    <link
+      rel="apple-touch-icon"
+      sizes="180x180"
+      href="/favicon/apple-touch-icon.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="32x32"
+      href="/favicon/favicon-32x32.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="16x16"
+      href="/favicon/favicon-16x16.png"
+    />
+    <link rel="manifest" href="/favicon/site.webmanifest" />
+    <link rel="stylesheet" href="/styles/main.css" />
+    <link rel="stylesheet" href="/styles/markdown.css" />
+    <script src="/highlight.min.js"></script>
+  </head>
+  <body>
+    <nav class="navbar" id="navbar">
+      <a class="navbar-link" href="/">Home</a>
+    </nav>
+
+    <div class="blog-container">
+      <h1 id="how-blogwildwooddev-works">How blog.wildwooddev works</h1>
+      <style>
+        .mvc {
+          width: 300px;
+        }
+
+        @media screen and (min-width: 1000px) {
+          .mvc {
+            width: 450px;
+          }
+        }
+
+        .mvc img {
+          width: 100%;
+        }
+      </style>
+
+      <p>
+        I wanted to do a little techincal preview post on how I designed aspects
+        of the parser for this site. And touch a little on how the backend works
+        as well.
+      </p>
+      <h2 id="technologies-used">Technologies Used</h2>
+      <p>This site is designed using a couple different technologies</p>
+      <ul>
+        <li>
+          <a href="https://nodejs.org/en/" target="_blank">Nodejs</a> |
+          Javascript runtime engine
+        </li>
+        <li>
+          <a href="https://koajs.com/" target="_blank">Koa</a> | Nodejs web
+          server framework
+        </li>
+        <li>
+          <a href="https://ejs.co/" target="_blank">EJS</a> | HTML templating
+          engine
+        </li>
+        <li>
+          <a href="https://www.markdownguide.org/" target="_blank">Markdown</a>
+          | Markdown text syntax
+        </li>
+        <li>
+          <a href="https://marked.js.org/" target="_blank">MarkdownJS</a> |
+          Markdown parser
+        </li>
+        <li>
+          <a href="https://www.nginx.com/" target="_blank">Nginx</a> | Reverse
+          proxy
+        </li>
+      </ul>
+      <h2 id="backend-layout">Backend Layout</h2>
+      <p>
+        The backend layout I choose for this project is based around a common
+        design pattern called
+        <a
+          href="https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93controller"
+          target="_blank"
+          >MVC</a
+        >.
+      </p>
+      <ul>
+        <li>M: Model</li>
+        <li>V: View</li>
+        <li>C: Controller</li>
+      </ul>
+      <div class="mvc">
+        <p><img src="/images/blogmvc.png" alt="Backend Layout" /></p>
+      </div>
+
+      <p>
+        This is a picture of some of the actual code layout for this site. You
+        can see there is a folder called &#39;views&#39;, that comes straight
+        from that &#39;MVC&#39; design pattern. You may also notice there
+        isn&#39;t a &#39;Model&#39; or &#39;Controller&#39; folder within this
+        structure. This is due to the need of the site itself.
+      </p>
+      <ul>
+        <li>
+          &#39;Models&#39; are computer code representations of a database model
+        </li>
+        <li>
+          &#39;Views&#39; take care of html templating, or what you see on the
+          site
+        </li>
+        <li>
+          &#39;Controllers&#39; are actions that are run when a web route is
+          matched like &quot;/blog&quot;
+        </li>
+      </ul>
+      <p>
+        In the name of keeping this site very simple no database is used for
+        this site; all files are locally parsed thorugh for data, instead of
+        being placed in a database. And this site is so simple it only uses two
+        controller style functions, so I didn&#39;t feel a need to dedicate the
+        file space for them.
+      </p>
+      <h2 id="how-markdown-is-parsed">How Markdown is Parsed</h2>
+      <p>
+        This sites main and only goal is to allow the user to read blog style
+        posts. This is pretty simple in design but actually requires some design
+        work and different choices were made for simplicity sake. When you load
+        up a website there are main different files that are loaded so you can
+        view the site. One of the major files is the .html file, this file
+        contains all the text that is displayed to the users browser. HTML
+        stands for &#39;hyper-text markup language&#39;; so is this the same as
+        &#39;Markdown&#39;? Well they are both markup languages but very
+        different in application. This website takes Markdown and turns it into
+        HTML, and I will show you how and why.
+      </p>
+      <h3 id="why-markdown-is-converted-to-html">
+        Why Markdown is Converted to HTML
+      </h3>
+      <p>Lets look at some code examples of HTML verses Markdown</p>
+      <h4 id="html">HTML:</h4>
+      <pre><code class="language-html">&lt;h1&gt;Hello World!&lt;/h1&gt;
+</code></pre>
+      <h4 id="markdown">Markdown:</h4>
+      <pre><code class="language-Markdown"># Hello World!
+</code></pre>
+      <p>
+        So that is a super simple example, but both of those lines translate to
+        the same thing; a string of characters that say &#39;Hello World!&#39;
+      </p>
+      <p>
+        Now lets look at an example using a code block it self, this time lets
+        put the markdown first.
+      </p>
+      <h4 id="markdown-1">Markdown:</h4>
+      <pre><code class="language-Markdown">```ts
+import { serve } from &quot;https://deno.land/std/http/server.ts&quot;;
+const s = serve({ port: 8000 });
+console.log(&quot;http://localhost:8000/&quot;);
+for await (const req of s) {
+  req.respond({ body: &quot;Hello World\n&quot; });
+}
+```
+</code></pre>
+      <h4 id="html-1">HTML:</h4>
+      <pre><code class="language-html">&lt;code class=&quot;language-ts hljs language-typescript&quot;
+  &gt;&lt;span class=&quot;hljs-keyword&quot;&gt;import&lt;/span&gt; { serve }
+  &lt;span class=&quot;hljs-keyword&quot;&gt;from&lt;/span&gt;
+  &lt;span class=&quot;hljs-string&quot;&gt;&quot;https://deno.land/std/http/server.ts&quot;&lt;/span&gt;;
+  &lt;span class=&quot;hljs-keyword&quot;&gt;const&lt;/span&gt; s =
+  &lt;span class=&quot;hljs-title function_&quot;&gt;serve&lt;/span&gt;({
+  &lt;span class=&quot;hljs-attr&quot;&gt;port&lt;/span&gt;: &lt;span class=&quot;hljs-number&quot;&gt;8000&lt;/span&gt; });
+  &lt;span class=&quot;hljs-variable language_&quot;&gt;console&lt;/span&gt;.&lt;span
+    class=&quot;hljs-title function_&quot;
+    &gt;log&lt;/span
+  &gt;(&lt;span class=&quot;hljs-string&quot;&gt;&quot;http://localhost:8000/&quot;&lt;/span&gt;);
+  &lt;span class=&quot;hljs-keyword&quot;&gt;for&lt;/span&gt;
+  &lt;span class=&quot;hljs-keyword&quot;&gt;await&lt;/span&gt; (&lt;span class=&quot;hljs-keyword&quot;
+    &gt;const&lt;/span
+  &gt;
+  req &lt;span class=&quot;hljs-keyword&quot;&gt;of&lt;/span&gt; s) { req.&lt;span
+    class=&quot;hljs-title function_&quot;
+    &gt;respond&lt;/span
+  &gt;({ &lt;span class=&quot;hljs-attr&quot;&gt;body&lt;/span&gt;:
+  &lt;span class=&quot;hljs-string&quot;&gt;&quot;Hello World\n&quot;&lt;/span&gt; }); }
+&lt;/code&gt;
+</code></pre>
+      <p>
+        Ummmm what...that is a huge difference, the HTML is very difficult to
+        read and understand, while the Markdown from someone who understands the
+        coding lanugage TypeScript (ts) is very human readable.
+      </p>
+      <p>
+        But we have a problem... the web browser can only read HTML, not
+        Markdown.
+      </p>
+      <p>
+        So this is where parsing comes in! Parsing is the process of converting
+        one thing into another! Markdown is human writeable and readable but
+        needs to be parsed to HTML so the web browser can display it correctly!
+      </p>
+      <h3 id="how-markdown-is-converted-to-html">
+        How Markdown is Converted to HTML
+      </h3>
+      <p>
+        Well let me show you! Here are the two main parser functions my website
+        uses to convert Markdown into HTML. This is a coding language called
+        TypeScript, and its the main server lanuage of this website.
+      </p>
+      <pre><code class="language-ts">export const getBlogIndexArray = async () =&gt; {
+  interface IBlog {
+    fileName: string;
+    blogTitle: string;
+    blogDate: any;
+  }
+  const blogsArray = [];
+  const data = await fs.readdir(&quot;./blog/&quot;);
+  for (const file of data) {
+    const blog = &lt;IBlog&gt;{};
+    blog.fileName = &lt;string&gt;file.substr(0, file.indexOf(&quot;.markdown&quot;));
+    const fileData = await fs.readFile(`./blog/${file}`);
+
+    const meParsed = fileData
+      .toString()
+      .substr(0, fileData.toString().indexOf(&quot;#&quot;))
+      .replace(/---|  - |\r/g, &quot;&quot;)
+      .split(&quot;\n&quot;)
+      .filter((x: any) =&gt; x != &quot;&quot;)
+      .filter((x: any) =&gt; x != &quot;tags:&quot;)
+      .map((x: any) =&gt; x.split(&quot;:&quot;).pop()?.trim());
+    blog.blogTitle = &lt;string&gt;meParsed[0];
+    blog.blogDate = new Date(&lt;string&gt;meParsed[1]);
+    blogsArray.push(blog);
+  }
+  return blogsArray.sort((a, b) =&gt; b.blogDate - a.blogDate);
+};
+</code></pre>
+      <pre><code class="language-ts">export const parseMarkdown = async (fileName: string) =&gt; {
+  const data = await fs.readFile(`./blog/${fileName}.markdown`);
+  const parsed = marked(data.toString());
+  const body = parsed.substr(parsed.indexOf(&quot;&lt;h1&quot;));
+
+  const headers = parsed
+    .substr(0, parsed.indexOf(&quot;&lt;h1&quot;))
+    .replace(/(&lt;([^&gt;]+)&gt;)/gi, &quot;&quot;)
+    .split(&quot;\n&quot;)
+    .filter((x) =&gt; x != &quot;&quot;)
+    .filter((x) =&gt; x != &quot;tags:&quot;)
+    .map((x) =&gt; x.split(&quot;: &quot;).pop());
+
+  const head = headers.slice(0, 2);
+  const tags = headers.slice(2);
+
+  return { body, header: { title: head[0], date: head[1], tags } };
+};
+</code></pre>
+      <p>
+        Pretty crazy huh?! These two functions are how this website is possible.
+        Using a combanation of string regex maniputaion, functional programming
+        and parsing I am able to convert Markdown files into HTML so you can
+        enough these posts.
+      </p>
+      <h2 id="the-frontend">The Frontend</h2>
+      <p>
+        And then lastly all this information is served to the user via an http
+        server called Koa. This is an exchnage of information. When you click a
+        link to a blog post, the server is sent a message from your computer
+        asking for that specific blog. The server then searches for that blog,
+        parses it to HTML and sends it to your browser for viewing!
+      </p>
+      <pre><code class="language-ts">blogRouter.get(&quot;/:id&quot;, async (ctx: Context, next: Next) =&gt; {
+  const blogId = ctx.params.id;
+
+  try {
+    const parsedObj = await parseMarkdown(blogId);
+    await ctx.render(&quot;blogpost&quot;, {
+      body: parsedObj.body,
+      title: parsedObj.header.title,
+      date: parsedObj.header.date,
+      tags: parsedObj.header.tags,
+    });
+  } catch (error) {
+    await next();
+  }
+});
+</code></pre>
+      <p>
+        If you look at this function, the &quot;/:id&quot; part is how the
+        server knows what blog post you want to view. This blog post has an id
+        of <code>/wild-memo-2021-7-4</code>. That is passed to the server which
+        allows it to find this post file for parsing.
+      </p>
+      <h2 id="source-files">Source Files</h2>
+      <p>
+        I want to end this blog post by showing you the complete source code for
+        this page in both Markdown and HTML. These will be external links, due
+        to how long they are; but try to imagine writing the HTML part by hand.
+        It is dueable but a lot of work. This blog post was hand written in
+        Markdown and it takes just as long as writing a word doc file, pretty
+        cool!
+      </p>
+      <p><a href="/source/source.text" target="_blank">HTML Source</a></p>
+      <p>
+        <a href="/source/source.markdown" target="_blank">Markdown Source</a>
+      </p>
+      <h3 id="eric-christensen">Eric Christensen</h3>
+    </div>
+    <p class="tags">
+      Tags: `wildwood` `wildwooddev` `markdown` `html` `parser`
+    </p>
+    <script>
+      hljs.highlightAll();
+    </script>
+  </body>
+</html>

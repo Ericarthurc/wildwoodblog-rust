@@ -2,14 +2,15 @@ use askama::Template;
 use axum::{
     body::{self, Full},
     http::StatusCode,
-    response::{Html, IntoResponse, Response},
-    routing::get,
+    response::{Html, IntoResponse, Redirect, Response},
+    routing::{get, get_service},
     Router,
 };
 use comrak::{markdown_to_html, ComrakOptions};
 use std::fmt;
 use std::fs;
 use std::net::SocketAddr;
+use tower_http::{services::ServeDir, trace::TraceLayer};
 
 #[derive(Debug, Default)]
 struct Meta {
@@ -56,7 +57,21 @@ impl Meta {
 
 #[tokio::main]
 async fn main() {
-    let app = Router::new().route("/", get(root));
+    let app = Router::new()
+        .fallback(get_service(ServeDir::new("./public")).handle_error(
+            |error: std::io::Error| async move {
+                (
+                    StatusCode::INTERNAL_SERVER_ERROR,
+                    format!("Unhandled internal error: {}", error),
+                )
+            },
+        ))
+        .route(
+            "/",
+            // get(|| async { Redirect::permanent("/blog".parse().unwrap()) }),
+            get(|| async { Redirect::to("/blog".parse().unwrap()) }),
+        )
+        .route("/blog", get(root));
 
     let addr = SocketAddr::from(([127, 0, 0, 1], 4000));
     println!("Server: {}", addr);
