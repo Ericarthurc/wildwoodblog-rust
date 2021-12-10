@@ -1,0 +1,11 @@
+{% extends "root.html" %}
+
+{% block content %}
+    <h1>{{meta.title}}</h1>
+    <h2>{{meta.date}}</h2>
+    <h3>{{ "{:?}"|format(meta.tags) }}</h3>
+    <h2>{{meta.series}}</h2>
+    <div>
+        {{markdown|safe}}
+    </div>
+{% endblock %}

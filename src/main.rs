@@ -1,9 +1,13 @@
+use askama::Template;
 use axum::{
-    response::Html,
-    routing::{get, post},
+    body::{self, Full},
+    http::StatusCode,
+    response::{Html, IntoResponse, Response},
+    routing::get,
     Router,
 };
 use comrak::{markdown_to_html, ComrakOptions};
+use std::fmt;
 use std::fs;
 use std::net::SocketAddr;
 
@@ -62,7 +66,34 @@ async fn main() {
         .unwrap();
 }
 
-async fn root() -> Html<String> {
+#[derive(Template)]
+#[template(path = "index.html")]
+struct IndexTemplate {
+    markdown: String,
+    meta: Meta,
+}
+
+struct HtmlTemplate<T>(T);
+
+impl<T> IntoResponse for HtmlTemplate<T>
+where
+    T: Template,
+{
+    fn into_response(self) -> Response {
+        match self.0.render() {
+            Ok(html) => Html(html).into_response(),
+            Err(err) => Response::builder()
+                .status(StatusCode::INTERNAL_SERVER_ERROR)
+                .body(body::boxed(Full::from(format!(
+                    "Failed to render template. Error: {}",
+                    err
+                ))))
+                .unwrap(),
+        }
+    }
+}
+
+async fn root() -> impl IntoResponse {
     let mut options = ComrakOptions::default();
     options.extension.autolink = true;
     options.extension.table = true;
@@ -70,7 +101,7 @@ async fn root() -> Html<String> {
     options.extension.superscript = true;
     options.extension.strikethrough = true;
     options.extension.footnotes = true;
-    // options.extension.front_matter_delimiter = Some("---".to_owned());
+    options.extension.front_matter_delimiter = Some("---".to_owned());
 
     options.render.unsafe_ = true;
 
@@ -83,9 +114,14 @@ async fn root() -> Html<String> {
 
     let mark = markdown_to_html(&file, &options);
 
-    println!("{}", mark);
+    // println!("{}", mark);
 
     let meta = Meta::new(&file);
+    // print!("{:#?}", meta);
 
-    Html(meta.title)
+    let template = IndexTemplate {
+        markdown: mark,
+        meta,
+    };
+    HtmlTemplate(template)
 }
