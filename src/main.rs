@@ -1,14 +1,15 @@
 use askama::Template;
 use axum::{
     body::{self, Full},
+    extract::Path,
     http::StatusCode,
     response::{Html, IntoResponse, Redirect, Response},
     routing::{get, get_service},
     Router,
 };
 use comrak::{markdown_to_html, ComrakOptions};
-use std::fs;
 use std::net::SocketAddr;
+use std::{collections::HashMap, fs};
 use tower_http::services::ServeDir;
 
 #[derive(Debug, Default)]
@@ -70,7 +71,10 @@ async fn main() {
             // get(|| async { Redirect::permanent("/blog".parse().unwrap()) }),
             get(|| async { Redirect::to("/blog".parse().unwrap()) }),
         )
-        .route("/blog", get(root));
+        .route("/blog", get(root))
+        .route("/blog/:blog", get(blog))
+        .route("/series", get(root))
+        .route("/series/:series", get(root));
 
     let addr = SocketAddr::from(([127, 0, 0, 1], 4000));
     println!("Server: {}", addr);
@@ -108,6 +112,39 @@ where
 }
 
 async fn root() -> impl IntoResponse {
+    let mark = markdown_parser("test");
+    let meta = meta_parser("test");
+    let template = IndexTemplate {
+        markdown: mark,
+        meta,
+    };
+    HtmlTemplate(template)
+}
+
+#[derive(Template)]
+#[template(path = "index.html")]
+struct BlogTemplate {
+    markdown: String,
+    meta: Meta,
+}
+
+async fn blog(Path(params): Path<HashMap<String, String>>) -> impl IntoResponse {
+    let blog = params.get("blog").unwrap();
+
+    let mark = markdown_parser(blog);
+    let meta = meta_parser(blog);
+    let template = BlogTemplate {
+        markdown: mark,
+        meta,
+    };
+    HtmlTemplate(template)
+}
+
+fn get_file(file_name: &str) -> String {
+    fs::read_to_string(format!("./markdown/{}.markdown", file_name)).unwrap()
+}
+
+fn markdown_parser(file_name: &str) -> String {
     let mut options = ComrakOptions::default();
     options.extension.autolink = true;
     options.extension.table = true;
@@ -116,26 +153,15 @@ async fn root() -> impl IntoResponse {
     options.extension.strikethrough = true;
     options.extension.footnotes = true;
     options.extension.front_matter_delimiter = Some("---".to_owned());
-
     options.render.unsafe_ = true;
 
-    let file = fs::read_to_string("./markdown/test.markdown").unwrap();
-    // let new: Vec<&str> = file.split("---").collect();
-    // println!("{:#?}", new);
+    let file = get_file(file_name);
 
-    // let converted = markdown_to_html(new[2], &options);
-    // Html(converted);
+    markdown_to_html(&file, &options)
+}
 
-    let mark = markdown_to_html(&file, &options);
+fn meta_parser(file_name: &str) -> Meta {
+    let file = get_file(file_name);
 
-    // println!("{}", mark);
-
-    let meta = Meta::new(&file);
-    // print!("{:#?}", meta);
-
-    let template = IndexTemplate {
-        markdown: mark,
-        meta,
-    };
-    HtmlTemplate(template)
+    Meta::new(&file)
 }
