@@ -7,10 +7,9 @@ use axum::{
     Router,
 };
 use comrak::{markdown_to_html, ComrakOptions};
-use std::fmt;
 use std::fs;
 use std::net::SocketAddr;
-use tower_http::{services::ServeDir, trace::TraceLayer};
+use tower_http::services::ServeDir;
 
 #[derive(Debug, Default)]
 struct Meta {

@@ -36,9 +36,6 @@ Well… <a href="https://blog.wildwooddev.com/blog/wild-memo-2021-7-5" target="_
     margin-top: 10px;
     margin-bottom: 10px;
   }
-  p {
-    color: red;
-  }
 
 </style>
 
