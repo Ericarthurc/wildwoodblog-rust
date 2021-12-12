@@ -4,8 +4,9 @@ use askama::Template;
 use axum::{extract::Path, response::IntoResponse};
 
 use crate::parsers::{
-    markdown::{markdown_parser, meta_parser},
+    get_blog_index_vec, get_meta_and_markdown,
     meta::Meta,
+    parsers::{markdown_parser, meta_parser},
 };
 
 use super::HtmlTemplate;
@@ -13,16 +14,13 @@ use super::HtmlTemplate;
 #[derive(Template)]
 #[template(path = "blog_index.html")]
 struct BlogIndexTemplate {
-    markdown: String,
-    meta: Meta,
+    blog_index: Vec<Meta>,
 }
 
 pub async fn blog_index_handler() -> impl IntoResponse {
-    let mark = markdown_parser("test").await;
-    let meta = meta_parser("test").await;
+    let meta_vec = get_blog_index_vec().await;
     let template = BlogIndexTemplate {
-        markdown: mark,
-        meta,
+        blog_index: meta_vec,
     };
     HtmlTemplate(template)
 }
@@ -37,8 +35,7 @@ struct BlogTemplate {
 pub async fn blog_handler(Path(params): Path<HashMap<String, String>>) -> impl IntoResponse {
     let blog = params.get("blog").unwrap();
 
-    let mark = markdown_parser(blog).await;
-    let meta = meta_parser(blog).await;
+    let (meta, mark) = get_meta_and_markdown(blog).await;
     let template = BlogTemplate {
         markdown: mark,
         meta,

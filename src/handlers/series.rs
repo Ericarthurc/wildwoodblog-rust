@@ -4,8 +4,8 @@ use askama::Template;
 use axum::{extract::Path, response::IntoResponse};
 
 use crate::parsers::{
-    markdown::{markdown_parser, meta_parser},
     meta::Meta,
+    parsers::{markdown_parser, meta_parser},
 };
 
 use super::HtmlTemplate;

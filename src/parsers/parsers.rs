@@ -1,12 +1,5 @@
-use std::io::Error;
-
-use super::meta::Meta;
-use async_fs;
+use super::{get_file, meta::Meta};
 use comrak::{markdown_to_html, ComrakOptions};
-
-pub async fn get_file(file_name: &str) -> Result<String, Error> {
-    async_fs::read_to_string(format!("./markdown/{}.markdown", file_name)).await
-}
 
 pub async fn markdown_parser(file_name: &str) -> String {
     let mut options = ComrakOptions::default();

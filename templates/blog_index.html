@@ -3,6 +3,9 @@ head %}
 <link rel="stylesheet" href="/styles/markdown.css" />
 <script src="/js/highlight.min.js"></script>
 {% endblock %} {% block content %} {% include"includes/navbar.html" %}
-<h1>{{meta.title}}</h1>
-<h2>{{meta.date}}</h2>
+<ul>
+  {% for tag in blog_index %}
+  <li>{{ tag.date }} {{ tag.title }}</li>
+  {% endfor %}
+</ul>
 {% endblock %}
