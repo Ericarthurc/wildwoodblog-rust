@@ -1,12 +1,14 @@
-use super::meta::Meta;
-use comrak::{markdown_to_html, ComrakOptions};
-use std::fs;
+use std::io::Error;
 
-pub fn get_file(file_name: &str) -> String {
-    fs::read_to_string(format!("./markdown/{}.markdown", file_name)).unwrap()
+use super::meta::Meta;
+use async_fs;
+use comrak::{markdown_to_html, ComrakOptions};
+
+pub async fn get_file(file_name: &str) -> Result<String, Error> {
+    async_fs::read_to_string(format!("./markdown/{}.markdown", file_name)).await
 }
 
-pub fn markdown_parser(file_name: &str) -> String {
+pub async fn markdown_parser(file_name: &str) -> String {
     let mut options = ComrakOptions::default();
     options.extension.autolink = true;
     options.extension.table = true;
@@ -17,13 +19,13 @@ pub fn markdown_parser(file_name: &str) -> String {
     options.extension.front_matter_delimiter = Some("---".to_owned());
     options.render.unsafe_ = true;
 
-    let file = get_file(file_name);
+    let file = get_file(file_name).await.unwrap();
 
     markdown_to_html(&file, &options)
 }
 
-pub fn meta_parser(file_name: &str) -> Meta {
-    let file = get_file(file_name);
+pub async fn meta_parser(file_name: &str) -> Meta {
+    let file = get_file(file_name).await.unwrap();
 
     Meta::new(&file)
 }

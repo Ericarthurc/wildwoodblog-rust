@@ -18,8 +18,8 @@ struct BlogIndexTemplate {
 }
 
 pub async fn blog_index_handler() -> impl IntoResponse {
-    let mark = markdown_parser("test");
-    let meta = meta_parser("test");
+    let mark = markdown_parser("test").await;
+    let meta = meta_parser("test").await;
     let template = BlogIndexTemplate {
         markdown: mark,
         meta,
@@ -37,8 +37,8 @@ struct BlogTemplate {
 pub async fn blog_handler(Path(params): Path<HashMap<String, String>>) -> impl IntoResponse {
     let blog = params.get("blog").unwrap();
 
-    let mark = markdown_parser(blog);
-    let meta = meta_parser(blog);
+    let mark = markdown_parser(blog).await;
+    let meta = meta_parser(blog).await;
     let template = BlogTemplate {
         markdown: mark,
         meta,

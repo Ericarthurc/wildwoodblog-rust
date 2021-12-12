@@ -5,16 +5,15 @@ head %}
 {% endblock %} {% block content %} {% include"includes/navbar.html" %}
 <h1>{{meta.title}}</h1>
 <h2>{{meta.date}}</h2>
-<!-- <h3>{{ "{:?}"|format(meta.tags) }}</h3> -->
+{% if meta.series.len() > 0 %}
+<h2>{{meta.series}}</h2>
+{% endif %}
+<div>{{markdown|safe}}</div>
 <ul>
   {% for tag in meta.tags %}
   <li>{{ tag }}</li>
   {% endfor %}
 </ul>
-{% if meta.series.len() > 0 %}
-<h2>{{meta.series}}</h2>
-{% endif %}
-<div>{{markdown|safe}}</div>
 <script>
   hljs.highlightAll();
 </script>
