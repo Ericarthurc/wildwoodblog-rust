@@ -7,7 +7,10 @@ use axum::{
 use std::net::SocketAddr;
 use tower_http::services::ServeDir;
 
-use crate::handlers::blog::{blog, root};
+use crate::handlers::{
+    blog::{blog_handler, blog_index_handler},
+    series::{series_handler, series_index_handler},
+};
 
 mod handlers;
 mod parsers;
@@ -27,10 +30,10 @@ async fn main() {
             "/",
             get(|| async { Redirect::to("/blog".parse().unwrap()) }),
         )
-        .route("/blog", get(root))
-        .route("/blog/:blog", get(blog))
-        .route("/series", get(root))
-        .route("/series/:series", get(root));
+        .route("/blog", get(blog_index_handler))
+        .route("/blog/:blog", get(blog_handler))
+        .route("/series", get(series_index_handler))
+        .route("/series/:series", get(series_handler));
 
     let addr = SocketAddr::from(([127, 0, 0, 1], 4000));
     println!("Server: {}", addr);
