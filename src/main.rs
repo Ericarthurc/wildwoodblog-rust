@@ -1,6 +1,7 @@
 use axum::{
+    handler::Handler,
     http::StatusCode,
-    response::Redirect,
+    response::{IntoResponse, Redirect},
     routing::{get, get_service},
     Router,
 };
@@ -17,23 +18,31 @@ mod parsers;
 
 #[tokio::main]
 async fn main() {
+    let blog_routes = Router::new()
+        .route("/", get(blog_index_handler))
+        .route("/:blog", get(blog_handler));
+
+    let series_routes = Router::new()
+        .route("/", get(series_index_handler))
+        .route("/:series", get(series_handler));
+
     let app = Router::new()
         .fallback(get_service(ServeDir::new("./public")).handle_error(
             |error: std::io::Error| async move {
-                (
-                    StatusCode::INTERNAL_SERVER_ERROR,
-                    format!("Unhandled internal error: {}", error),
-                )
+                match error {
+                    _ => (
+                        StatusCode::INTERNAL_SERVER_ERROR,
+                        format!("Unhandled internal error: {}", error),
+                    ),
+                }
             },
         ))
         .route(
             "/",
             get(|| async { Redirect::to("/blog".parse().unwrap()) }),
         )
-        .route("/blog", get(blog_index_handler))
-        .route("/blog/:blog", get(blog_handler))
-        .route("/series", get(series_index_handler))
-        .route("/series/:series", get(series_handler));
+        .nest("/blog", blog_routes)
+        .nest("/series", series_routes);
 
     let addr = SocketAddr::from(([127, 0, 0, 1], 4000));
     println!("Server: {}", addr);
@@ -42,3 +51,9 @@ async fn main() {
         .await
         .unwrap();
 }
+
+async fn handler_404() -> impl IntoResponse {
+    (StatusCode::NOT_FOUND, "nothing to see here")
+}
+
+async fn static_handler() -> impl IntoResponse {}

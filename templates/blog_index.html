@@ -3,9 +3,19 @@ head %}
 <link rel="stylesheet" href="/styles/markdown.css" />
 <script src="/js/highlight.min.js"></script>
 {% endblock %} {% block content %} {% include"includes/navbar.html" %}
-<ul>
-  {% for tag in blog_index %}
-  <li>{{ tag.date }} {{ tag.title }}</li>
-  {% endfor %}
-</ul>
+<div class="main-container">
+  <p class="main-header">Wildwood Tech Posts</p>
+  <ul class="index-list">
+    {% for blog in blog_index %}
+    <li>
+      <a class="list-anchor" href="/blog/{{blog.file_name}}">
+        <div class="list-anchor__info">
+          <span class="info-title"> {{ blog.title }} </span>
+          <span class="info-date"> {{ blog.date }} </span>
+        </div>
+      </a>
+    </li>
+    {% endfor %}
+  </ul>
+</div>
 {% endblock %}
