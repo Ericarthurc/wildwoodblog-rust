@@ -1,6 +1,6 @@
 use axum::{
     http::{Response, StatusCode},
-    response::{IntoResponse, Redirect},
+    response::Redirect,
     routing::{get, get_service},
     Router,
 };
@@ -70,9 +70,3 @@ async fn main() {
         .await
         .unwrap();
 }
-
-// async fn handler_404() -> impl IntoResponse {
-//     (StatusCode::NOT_FOUND, "nothing to see here")
-// }
-
-// async fn static_handler() -> impl IntoResponse {}

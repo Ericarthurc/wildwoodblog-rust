@@ -1,0 +1,42 @@
+---
+title: Big Sur and Arm Macs
+date: November 11, 2020
+tags: wildwood, macos, upgrade
+series: macOs
+---
+
+# Big Sur and Arm Macs
+
+Hey Wildwood and WCA Staff, big moves and news from Apple are among us so I just want to share the information that I have. In the last email I sent out, I explained Apple would be releasing ARM based Macs and their new Operating System update ‘Big Sur’, and they are officially here. As of yesterday, ARM based Mac products are ready for purchase in the form of a Macbook Air, Macbook Pro 13-inch and a Mac Mini. And tomorrow morning (November 12) MacOS 11.0.1 Big Sur will be released publicly. Due to this being a very complex and a multiple product release from Apple, I will break this down into ‘BigSur’ information first, and then ARM vs the older Macs (Intel) on ‘BigSur’. If you don’t want to read this email, I am recommending no one on staff upgrade to ‘Big Sur’ or purchase an ARM Mac.
+
+## Big Sur (for Intel Macs)
+
+Starting tomorrow morning, November 12th, Mac OS ‘Big Sur’ (11.0.1) will be available for public download. If your Mac is a 2013 or newer model your device will be compatible with the release. I personally have been following the development of ‘Big Sur’ very closely, and have been testing software on all beta versions. And as of right now, I personally, can’t recommend employees of Wildwood and WCA upgrade past Mac Catalina (10.15.7).
+
+## Big Sur Wildwood Printers (for Intel Macs)
+
+Our printers at Wildwood currently have no driver support in ‘Big Sur’; I am watching this very closely, but current drivers will fail to install and no new drivers have been released by Xerox/EFI. Fiery’s Command Workstation also will not work on ‘Big Sur’ with the Main Office Printer. So, if you choose to upgrade to ‘Big Sur’ just know that, currently, you will have zero printing support on campus.
+
+## Big Sur Adobe Creative Cloud (for Intel Macs)
+
+All Adobe Creative Cloud software currently works in ‘Big Sur’ just fine. It gets a little big more complicated with the new ARM based Macs, but I will touch on that below (please read that section below if you’re consider the new ARM Macs). For now, all current on campus Macs and Intel based Macs have full Adobe Creative Cloud support in ‘Big Sur’, you just can’t print.
+
+## Big Sur ProPresenter 6/7 (for Intel Macs)
+
+If you head over to Renewed Vision’s (ProPresenter maker) website you will see that Pro 6 and 7 don’t have ‘Big Sur’ support, but I did test Pro 7 and it works just fine. According to Renewed Vision, Pro 6 will also probably get support for ‘Big Sur’. In the current state, usability could be hit or miss, and you will not get official support or help from Renewed Vision.
+
+## New ARM Macs
+
+Also announced and released yesterday are three new models from Apple using the new ARM design. Like I said before there is a Macbook Air, Macbook Pro 13-inch and Mac Mini. If you head over to Apple’s website you can purchase these products right now, and pricing is the lowest I have seen in a while. These lower prices may be a huge drawing in factor to you, but I would warn that these products are not battle tested in the real world and will suffer many issues. Apple needs as many people as they can on the new ARM macs, so the lower prices are very intentional. This isn’t a small change, this is a whole core redesign and will take awhile to work out the bugs and compatibly issues. In the section above, I listed some of the most used software at Wildwood and what that would look like on ‘Big Sur’ in its current state; and in the ARM Mac world I can’t guarantee any of them will work. It could be very possible our Main Office Xerox printer will never have an ARM based driver. ProPresenter currently has no plans to support ARM. And from news released today, Adobe Photoshop won’t hit ARM until 2021, and that doesn’t even include their other software like InDesign and Illustrator. In the current state, I just can’t recommend anyone on staff in these workflows buy an ARM Mac. I am getting my hands on one in the next couple of weeks and will release more information as I test and learn more.
+
+## Older (Intel) Macs
+
+This category is currently every Mac owner on campus; with this release of ‘Big Sur’ it starts the inevitable countdown before all our Macs aren’t supported by Apple and big software developers… yay… From current information and previous experience, Intel based Macs will probably receive official support for another 7-10 years, so please don’t think you have to throw out your current Macs. If you are using a 2013-2014 Mac just know next year you will drop out of official support. For anyone looking to purchase a Mac right now, buying a 2015-2017 model for a decent price isn’t a bad option, but if you can wait a couple years for ARM to sort out the issues and can afford one, that would be the better future proof purchase. If you are looking at the new 16-inch Intel MacBook Pro for $2500+, you will still get your 7 years of Apple support, it just may not be the best financial option in the long run. At some point everyone will need to migrate to ARM, so just keep that in mind. Your old Macs will still work, you will just start losing software support; my guess is in about 4-5 years.
+
+## Conclusion
+
+In the current state I would recommend don’t upgrade to ‘Big Sur’ and don’t buy an ARM Mac if you want support for the workflow here at Wildwood. I will be watching this whole situation very closely and hopefully will have more information at the beginning of the new year.
+
+Your friendly neighborhood IT guy,
+
+### Eric Christensen

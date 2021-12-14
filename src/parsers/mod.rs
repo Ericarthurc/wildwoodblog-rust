@@ -32,6 +32,8 @@ pub async fn get_blog_index_vec() -> Vec<Meta> {
         );
     }
 
+    meta_vec.sort_by(|a, b| a.date.cmp(&b.date));
+
     meta_vec
 }
 
