@@ -1,17 +1,20 @@
 use axum::{
-    handler::Handler,
-    http::StatusCode,
+    http::{Response, StatusCode},
     response::{IntoResponse, Redirect},
     routing::{get, get_service},
     Router,
 };
 use std::net::SocketAddr;
-use tower_http::services::ServeDir;
 
 use crate::handlers::{
     blog::{blog_handler, blog_index_handler},
     series::{series_handler, series_index_handler},
 };
+
+use http_body::{Body as _, Full};
+use std::io;
+use tower::ServiceBuilder;
+use tower_http::services::fs::{ServeDir, ServeFileSystemResponseBody};
 
 mod handlers;
 mod parsers;
@@ -26,17 +29,33 @@ async fn main() {
         .route("/", get(series_index_handler))
         .route("/:series", get(series_handler));
 
+    let handler_404 = ServiceBuilder::new().and_then(
+        |response: Response<ServeFileSystemResponseBody>| async move {
+            let response = if response.status() == StatusCode::NOT_FOUND {
+                let body = Full::from("Not Found").map_err(|err| match err {}).boxed();
+                Response::builder()
+                    .status(StatusCode::NOT_FOUND)
+                    .body(body)
+                    .unwrap()
+            } else {
+                response.map(|body| body.boxed())
+            };
+
+            Ok::<_, io::Error>(response)
+        },
+    );
+
     let app = Router::new()
-        .fallback(get_service(ServeDir::new("./public")).handle_error(
-            |error: std::io::Error| async move {
-                match error {
-                    _ => (
+        .fallback(
+            get_service(handler_404.service(ServeDir::new("./public"))).handle_error(
+                |error: std::io::Error| async move {
+                    (
                         StatusCode::INTERNAL_SERVER_ERROR,
                         format!("Unhandled internal error: {}", error),
-                    ),
-                }
-            },
-        ))
+                    )
+                },
+            ),
+        )
         .route(
             "/",
             get(|| async { Redirect::to("/blog".parse().unwrap()) }),
@@ -52,8 +71,8 @@ async fn main() {
         .unwrap();
 }
 
-async fn handler_404() -> impl IntoResponse {
-    (StatusCode::NOT_FOUND, "nothing to see here")
-}
+// async fn handler_404() -> impl IntoResponse {
+//     (StatusCode::NOT_FOUND, "nothing to see here")
+// }
 
-async fn static_handler() -> impl IntoResponse {}
+// async fn static_handler() -> impl IntoResponse {}

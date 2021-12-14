@@ -11,5 +11,8 @@ serde = { version = "1.0.130", features = ["derive"] }
 axum = "0.4.2"
 comrak = "0.12.1"
 askama = "0.10.5"
+tower = { version = "0.4.11", features = ["full"] }
 tower-http = { version = "0.2.0", features = ["fs", "trace"] }
 async-fs = "1.5.0"
+http = "0.2.5"
+http-body = "0.4.4"
