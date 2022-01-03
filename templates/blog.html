@@ -3,17 +3,10 @@ head %}
 <link rel="stylesheet" href="/styles/markdown.css" />
 <script src="/js/highlight.min.js"></script>
 {% endblock %} {% block content %} {% include"includes/navbar.html" %}
-<h1>{{meta.title}}</h1>
-<h2>{{meta.date}}</h2>
-{% if meta.series.len() > 0 %}
-<h2>{{meta.series}}</h2>
-{% endif %}
-<div>{{markdown|safe}}</div>
-<ul>
-  {% for tag in meta.tags %}
-  <li>{{ tag }}</li>
-  {% endfor %}
-</ul>
+<div class="blog-container">
+  {{markdown|safe}}
+  <p class="tags">Tags:{% for tag in meta.tags %} `{{ tag }}`{% endfor %}</p>
+</div>
 <script>
   hljs.highlightAll();
 </script>

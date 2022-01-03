@@ -1,3 +1,17 @@
 {% extends "partials/head.html" %} {% block title %}Hey{% endblock %} {% block
 head %} {% endblock %} {% block content %} {% include"includes/navbar.html" %}
+<div class="main-container">
+  <p class="main-header">Series Categories</p>
+  <ul class="index-list">
+    {% for series in series_index %}
+    <li>
+      <a class="list-anchor" href="/series/{{series}}">
+        <div class="list-anchor__info">
+          <span class="info-title"> {{series}} </span>
+        </div>
+      </a>
+    </li>
+    {% endfor %}
+  </ul>
+</div>
 {% endblock %}

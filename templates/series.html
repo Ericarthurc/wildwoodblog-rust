@@ -1,3 +1,18 @@
 {% extends "partials/head.html" %} {% block title %}Hey{% endblock %} {% block
 head %} {% endblock %} {% block content %} {% include"includes/navbar.html" %}
+<div class="main-container">
+  <p class="main-header">{{series}} Series</p>
+  <ul class="index-list">
+    {% for series in series_meta %}
+    <li>
+      <a class="list-anchor" href="/blog/{{series.file_name}}">
+        <div class="list-anchor__info">
+          <span class="info-title"> {{series.title}} </span>
+          <span class="info-date"> {{series.date}} </span>
+        </div>
+      </a>
+    </li>
+    {% endfor %}
+  </ul>
+</div>
 {% endblock %}

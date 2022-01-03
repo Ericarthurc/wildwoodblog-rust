@@ -8,7 +8,7 @@ pub struct Meta {
 }
 
 impl Meta {
-    pub fn new(file: &str) -> Self {
+    pub fn new(file: &str, file_name: &str) -> Self {
         let mut meta = Meta::default();
 
         let raw_meta: Vec<String> = file
@@ -21,7 +21,6 @@ impl Meta {
 
         for line in raw_meta {
             match line.split(":").nth(0).unwrap() {
-                "file_name" => meta.file_name = line,
                 "title" => meta.title = line.split(":").nth(1).unwrap().trim().to_string(),
                 "date" => meta.date = line.split(":").nth(1).unwrap().trim().to_string(),
                 "tags" => {
@@ -37,6 +36,7 @@ impl Meta {
                 _ => (),
             }
         }
+        meta.file_name = file_name.to_string();
         return meta;
     }
 }

@@ -3,10 +3,9 @@ use std::collections::HashMap;
 use askama::Template;
 use axum::{extract::Path, response::IntoResponse};
 
-use crate::parsers::{
-    get_blog_index_vec, get_meta_and_markdown,
-    meta::Meta,
-    parsers::{markdown_parser, meta_parser},
+use crate::{
+    errors::AppError,
+    parsers::{get_blog_index_vec, get_meta_and_markdown, meta::Meta},
 };
 
 use super::HtmlTemplate;
@@ -17,12 +16,12 @@ struct BlogIndexTemplate {
     blog_index: Vec<Meta>,
 }
 
-pub async fn blog_index_handler() -> impl IntoResponse {
-    let meta_vec = get_blog_index_vec().await;
+pub async fn blog_index_handler() -> Result<impl IntoResponse, AppError> {
+    let meta_vec = get_blog_index_vec().await?;
     let template = BlogIndexTemplate {
         blog_index: meta_vec,
     };
-    HtmlTemplate(template)
+    Ok(HtmlTemplate(template))
 }
 
 #[derive(Template)]
@@ -32,13 +31,15 @@ struct BlogTemplate {
     meta: Meta,
 }
 
-pub async fn blog_handler(Path(params): Path<HashMap<String, String>>) -> impl IntoResponse {
+pub async fn blog_handler(
+    Path(params): Path<HashMap<String, String>>,
+) -> Result<impl IntoResponse, AppError> {
     let blog = params.get("blog").unwrap();
 
-    let (meta, mark) = get_meta_and_markdown(blog).await;
+    let (meta, mark) = get_meta_and_markdown(blog).await?;
     let template = BlogTemplate {
         markdown: mark,
         meta,
     };
-    HtmlTemplate(template)
+    Ok(HtmlTemplate(template))
 }

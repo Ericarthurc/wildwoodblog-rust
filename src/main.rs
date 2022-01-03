@@ -16,6 +16,7 @@ use std::io;
 use tower::ServiceBuilder;
 use tower_http::services::fs::{ServeDir, ServeFileSystemResponseBody};
 
+mod errors;
 mod handlers;
 mod parsers;
 
@@ -63,7 +64,7 @@ async fn main() {
         .nest("/blog", blog_routes)
         .nest("/series", series_routes);
 
-    let addr = SocketAddr::from(([127, 0, 0, 1], 4000));
+    let addr = SocketAddr::from(([127, 0, 0, 1], 4044));
     println!("Server: {}", addr);
     axum::Server::bind(&addr)
         .serve(app.into_make_service())
